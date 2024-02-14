@@ -1,0 +1,223 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{float}
+
+\title{Case study of Decision Tree Classification and Random Forest Classification}
+\author{Oksana Dura 
+\\Student ID: 1316268}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Every day hundreds and thousands of messages are being sent all over the world. Some of them are important messages while the rest is marketing or even scam messages. In our phones or emails, our messages are classified for us. In this case study we will learn two methods on how these classifications are made and most important we will be able to study different classification methods and find out their accuracy for a given dataset. In this report, we will be classifying email messages as spam or ham using Decision Tree Classification and Random Forest Classification and studying their classification accuracies. 
+    
+\end{abstract}
+
+\section{Introduction}
+
+For the case study we were given a dataset containing 57 attributes that encode the total number a word or character occurs, and a total of 4601 instances. The dataset classifies email messages as spam or ham. In the given dataset we had to apply the Random Forest Classification and Decision Tree Classification and report the following findings: 
+
+\begin{itemize}
+  \item Compare the accuracies of the Random Forest classifier as a function of the number of base learners (e.g., 10, 50, 100, 500, 1000, and 5000) and the number of features to consider at each split (e.g., auto or sqrt)
+  \item Compare the results of all the classifiers (with the best possible parameter setting for each classifier). Use classification accuracy ( number of instances correctly classified/total number of instances presented for classification), per class classification accuracy, and confusion matrix to compare the classifiers.
+\end{itemize}
+
+
+\section{Understanding the data}
+
+\subsection{Getting started with the data}
+
+Before implementing the classification methods is a good practice to understand the data you are working with, and make the necessary changes to get the best output. Some of the changes may include cleaning it, checking for missing data, replacing some values, naming the features. All of the preparations of the data depend on the dataset that we were given. \\
+\\
+Important elements from the dataset: 
+\begin{itemize}
+    \item The Datset consists of 57 features & 4601 samples.
+    \item The data consists of 55 float type, 2 int type, and 1 object type.
+    \item The object type named "Class" takes to values, either ham or spam. 
+    \item  There are no missing values in the dataset.
+\end{itemize}
+
+\subsection{Visualizing the dataset}
+
+\centering
+\textbf{The figure below represent per feature histogram}
+\\
+\centering
+\includegraphics[width=1\textwidth]{featureHist.png}
+\;
+I have assigned 1 to 'spam' and 0 to ham in the dataset, because it makes it easier for me to work with having them as integers. The replacement is seen in the following code:
+
+\includegraphics[width=1\textwidth]{ReplacingSpamWith1.png}
+\;
+Here we can see the changes that happened to "Class" column  in the dataset.
+\hspace{1cm}:
+\includegraphics[width=1\textwidth]{OutputTheReplacement.png}
+
+\subsection{Splitting the dataset }
+The dataset was split for training and testing, the respective variables were the following: 
+\textbf{spam\_training\_set, spam\_test\_set}. The training set contains 1000 instances and the testing set contains 3501 instances. The following figures show the implementation of the slipt method. 
+\\
+\;
+\includegraphics[width=1\textwidth]{SplitingtheDataset.png}
+\;
+\includegraphics[width=1\textwidth]{SplitingtheDatasetPart2.png}
+
+
+\subsection{Optimizing the parameters for the Random Forest}
+A random forest has a multitude of parameters that can be changed and adopted to give the best output. For this assignment we are going to concentrate only on two of them, as required from the assignment. 
+\begin{itemize}
+    \item The first parameter is n\_estimators which denotes the number of trees in the forest. For this purpose we will be considering the following list n\_estimators = [10, 50, 100, 500, 1000, 5000]. We are going to be iterating through all of the elements of the list n\_estimators compare the accuracies and find the optimal value for n\_estimators. 
+    \item The second parameter that is going to be considered is max\_features, that represents he number of features to consider when looking for the best split. There are three possible choices here, max\_features = ["sqrt", "log2", None]. We are going to be iterating thorugh each of them, comparing the accuracies and finding the highest accuracy. 
+    \begin{itemize}
+        \item "sqrt" represents the square root of n-features.
+        \item "log2" represents the logarithm with base 2 of n-features. 
+        \item None means that all features are considered.
+    \end{itemize}
+    \item There is a third parameter that is considered for the Random Forest classifier, and that is random\_state. Random state is used to reproduce the same result across different run. In both of the classifiers I have assigned random\_state = 101.
+\end{itemize}
+
+\textbf{The following code shows the implementation of the optimization of parameters}
+ \vspace{1cm}
+ \centering
+\includegraphics[width=15cm, height = 10cm]{RF_FeatureSelection.png}
+ \vspace{1cm}
+ As we wrote above the parameter optimization is considering only two of the parameters that Random Forest has. For the first feature n\_estimators we had 6 elements, and for the second feature max\_features there are 3 elements. Hence to find to best accuracy we have to compare all the possible combinations, in this case we get 18 accuracy values. We need to compare those and get the highest accuracy. 
+\includegraphics[width=1\textwidth]{RF_FeatureSelection_Output.png}
+ \vspace{1cm}
+ After the program is run we see the following parameters produce the highest accuracy:
+ \begin{itemize}
+     \item random\_state = 101 (Is constant)
+     \item n\_estimators = 100
+     \item max\_features = log2
+ \end{itemize}
+And the accuracy we get is = 0.9411274645931685
+\includegraphics[width=1\textwidth]{HighestAccuracyRF.png}
+
+
+\section{Optimizing the parameters for the Decision Tree}
+The second part of the assignment asks to compare the Decision Tree Classifier with the Random Forest Classifier. Before doing the comparison we need to find the optimal parameters to get the highest accuracy from the Decision Tree Classifier. 
+Same as the random forest, the decision tree  has a multitude of parameters that can be changed and adopted to give the best output.  For this assignment we are going to concentrate on four of them.
+\begin{itemize}
+    \item The first parameter is criterion which measures the quality of a split. For this purpose we will be considering the following  criterion\_DT = ["gini", "entropy"]. We are going to be iterating through all of the elements of the list criterion\_DT compare the accuracies and find the optimal value for criterion. 
+    \item The second parameter that is going to be considered is max\_features, that represents the number of features to consider when looking for the best split. There are three possible choices here, max\_features = ["sqrt", "log2", None]. We are going to be iterating thorugh each of them, comparing the accuracies and finding the highest accuracy. 
+    \begin{itemize}
+        \item "sqrt" represents the square root of n-features.
+        \item "log2" represents the logarithm with base 2 of n-features. 
+        \item None means that all features are considered.
+    \end{itemize}
+    \item The third parameter that is considered is splitter which denotes the strategy used to choose the split at each node. The list has two elements as following splitter= ["best", "random"].
+    \item the fourth parameter that is considered is max\_depth that is the maximum depth of the tree. For this case we are going to be looking at the following list max\_depth = [2,4,6,8,10,12].
+    \item There is a fifth parameter that is considered for the Decision Tree classifier, and that is random\_state. Random state is used to reproduce the same result across different run. In both of the classifiers I have assigned random\_state = 101.
+\end{itemize}
+ \vspace{1cm}
+\textbf{The following code shows the implementation of the optimization of parameters}
+\centering
+\includegraphics[width=15cm, height = 10cm]{DT_FeatureSelection.png}
+\vspace{1cm}
+As we wrote above the parameter optimization is considering four of the parameters that Decision Tree has. For the first parameter criterion we had 2 elements, and for the second feature max\_features there are 3 elements, for the third parameter we had 6 values and for the fourth parameter we had 2 values. Hence to find to best accuracy we have to compare all the possible combinations, in this case we get 72 accuracy values. We need to compare those and get the highest accuracy.
+
+\centering
+\includegraphics[width=1\textwidth]{DT_FeatureSelection_Output.png}
+\\
+\includegraphics[width=1\textwidth]{DT_FeatureSelection_Output2.png}
+\\
+\vspace{1cm}
+ After the program is run we see the following parameters produce the highest accuracy:
+ \begin{itemize}
+     \item random\_state = 101 (Is constant)
+     \item criterion =  entropy 
+     \item max\_depth =  12  
+     \item max\_features =  None 
+     \item splitter =  best
+     
+ \end{itemize}
+And the accuracy we get is = 0.9016939738961399
+\includegraphics[width=1\textwidth]{HighestAccuracyDT.png}
+\textbf{"Visualizing the decision tree"}
+\includegraphics[scale = 0.3]{DecisionTree.png}
+
+
+\section{Comparing Decision Tree Classifier and Random Forest Classifier}
+We have previously decided on the best parameters to be used for both of the classifiers to get the highest accuracy. Now it is time to compare the results we get from these two classifiers. 
+\\
+\vspace{0.5cm}
+
+\textbf{Outputting 20 predicted values for Decision Tree}
+\vspace{0.5cm}
+\includegraphics[width=1\textwidth]{PredictedValuesDT.png}
+\textbf{Outputting 20 predicted values for Random Forest}
+\vspace{5cm}
+\includegraphics[width=1\textwidth]{PredictedValuesRF.png}
+\textbf{The Decision Tree Classifier Outputs the following: }
+Here we need to remember that 0 represents "ham", and 1 represents "spam". 
+
+\includegraphics[width=1\textwidth]{PropertiesOfPrediction_DT.png}
+\begin{center}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+ "ham precision" & 0.92  \\ 
+ "ham precision" & 0.87 \\ 
+ Accuracy  & 0.9016939738961399 \\ 
+ \hline
+\end{tabular}
+\end{center}
+\vspace{1cm}
+\textbf{The Random Forest Classifier Outputs the following: }
+Here we need to remember that 0 represents "ham", and 1 represents "spam".
+\includegraphics[width=1\textwidth]{PropertiesOfPrediction_RF.png}
+
+\begin{center}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+ "ham precision" & 0.95  \\ 
+ "ham precision" & 0.93 \\ 
+ Accuracy  & 0.9411274645931685 \\ 
+ \hline
+\end{tabular}
+\end{center}
+\vspace{7cm}
+\centering
+\textbf{Confusion Matrix for Decision Tree Classifier}
+\vspace{0.5cm}
+\centering
+\includegraphics[scale = 0.75]{ConfusionMatrixDT.png}
+
+\centering
+\textbf{Confusion Matrix for Random Forest Classifier}
+\centering
+\includegraphics[scale = 0.75]{ConfusionMatrixRF.png}
+
+\newpage
+\textbf{Conclusion}
+\\
+From the above observation we can reach to the conclusion that: 
+\begin{itemize}
+    \item Random Forest Classifier has a higher accuracy than Decision Tree.
+    \item Random Forest Classifier has a higher precision than Decision Tree.
+    \item From the Confusion Matrix we can clearly notice that:
+    \begin{itemize}
+        \item False Positive of Random Forest $<$ False Positive of Decision Tree
+        \item False Negative of Random Forest $<$ False Negative of Decision Tree
+    \end{itemize}
+\end{itemize}
+
+
+
+
+
+
+
+\end{document}
